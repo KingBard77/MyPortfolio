@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# Set colors for script output
+NC='\033[0m'
+SUCCESS='\033[0;32m'
+ERROR='\033[0;31m'
+WARNING='\033[0;33m'
+INFO='\033[0;34m'
+
+echo -e "${INFO}##### Clean up ${NC}"
+rm node_nodules package-lock.json
+
+echo -e "${INFO}##### Package: Update ${NC}"
+apt --assume-yes update
+
+echo -e "${INFO}##### Package: Upgrade ${NC}"
+apt --assume-yes upgrade
+
+echo -e "${INFO}##### Node.js: Install ${NC}"
+curl -fsSL https://deb.nodesource.com/setup_current.x | -E bash -
+apt --assume-yes install nodejs
+
+echo -e "${INFO}##### Python: Install ${NC}"
+sudo apt install python3-venv python3-full
+python3 -m venv .venv
+source .venv/bin/activate
+pip install setuptools
+
+echo -e "${INFO}##### Npm: Install ${NC}"
+apt --assume-yes install npm
+npm install
+npm start
+
+echo -e "${INFO}##### Package: Verify ${NC}"
+node -v
+npm -v
+
+echo -e "${SUCCESS}#### Setup: Install Complete ${NC}"
+

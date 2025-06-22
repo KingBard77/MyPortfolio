@@ -1,0 +1,217 @@
+/* ========== HEADER BASE ========== */
+header {
+    height: 100vh;
+    padding-top: 7rem;
+    overflow: hidden;
+}
+
+.header__container {
+    text-align: left;
+    height: 100%;
+    position: relative;
+}
+
+.header__data {
+    display: inline-block;
+    position: relative;
+    top: 30%;
+    left: 8%;
+    bottom: 1.8rem;
+}
+
+.home__title {
+    font-size: var(--biggest-font-size);
+}
+
+.home__subtitle {
+    font-size: var(--h3-font-size);
+    font-weight: var(--font-medium);
+    margin-bottom: var(--mb-0-5);
+}
+
+.home__description {
+    font-size: var(--small-font-size);
+    line-height: 36px;
+    margin-bottom: var(--mb-0-5);
+    margin-top: var(--mb-2);
+}
+
+.home__description span {
+    color: var(--skin-color);
+    font-weight: var(--font-medium);
+}
+
+/* ========== HEADER BUTTONS ========== */
+.header__button {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    justify-content: left;
+    margin-bottom: 9rem;
+}
+
+.btn {
+    width: auto;
+    text-align: center;
+}
+
+/* ========== SOCIAL ICONS ========== */
+.header__social {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    position: absolute;
+    left: 0;
+    bottom: 3rem;
+}
+
+.header__social::after {
+    content: "";
+    width: 1px;
+    height: 2rem;
+    background: var(--skin-color);
+}
+
+.header__social-icon {
+    color: var(--skin-color);
+    font-weight: 300;
+    font-size: 0.9rem;
+}
+
+/* ========== SCROLL DOWN ========== */
+.scroll__down {
+    position: absolute;
+    right: -2.3rem;
+    bottom: 5rem;
+    transform: rotate(90deg);
+    font-weight: 400;
+    color: var(--color-white);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    column-gap: 0.25rem;
+    cursor: pointer;
+}
+
+.scroll__down-icon {
+    font-size: 1rem;
+    transition: 0.3s;
+    color: var(--skin-color);
+}
+
+.scroll__down-icon:hover {
+    transform: translateX(0.25rem);
+}
+
+/* ===========================================================
+📱 MOBILE / PHONE VIEW (≤ 767px)
+=========================================================== */
+@media screen and (max-width: 767px) {
+    header {
+        background: none;
+        height: auto;
+        padding: 7rem 1rem 1rem 1rem;
+        overflow: initial;
+    }
+
+    .header__data {
+        text-align: center;
+        position: static;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+
+    .home__title {
+        font-size: 2rem;
+    }
+
+    .home__subtitle {
+        font-size: 1.1rem;
+    }
+
+    .home__description {
+        font-size: 0.9rem;
+        line-height: 1.5rem;
+    }
+
+    .header__button {
+        flex-direction: row;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 3rem;
+    }
+
+    .btn {
+        width: auto;
+    }
+
+    .header__social,
+    .scroll__down,
+    .floating-div {
+        display: none;
+    }
+}
+
+/* ===========================================================
+📱 TABLET / IPAD VIEW (768px – 1024px)
+=========================================================== */
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    header {
+        height: 65vh;
+        padding: 0;
+        overflow: hidden;
+        position: relative;
+        display: block;
+    }
+
+    .header__container {
+        height: 100%;
+        position: relative;
+    }
+
+    .header__data {
+        position: absolute;
+        top: 50%;
+        left: 8%;
+        transform: translateY(-30%);
+        text-align: left;
+        max-width: 80%;
+    }
+
+    .header__button {
+        flex-direction: row;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+        margin-top: 2rem;
+    }
+
+    .btn {
+        width: auto;
+    }
+
+    .header__social {
+        position: absolute;
+        left: 0;
+        bottom: 3rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .scroll__down {
+        position: absolute;
+        right: -2.3rem;
+        bottom: 5rem;
+        transform: rotate(90deg);
+        display: flex;
+        align-items: center;
+    }
+
+    .floating-div {
+        display: block;
+    }
+}

@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.css": "/static/css/main.10d6c9d6.css",
+    "main.js": "/static/js/main.04fb3660.js",
+    "static/media/logo_mydid.jpg": "/static/media/logo_mydid.8a6952b02e5f014b9ffc.jpg",
+    "static/media/logo_unikl.png": "/static/media/logo_unikl.4905aa483d1a8f54a216.png",
+    "static/media/portfolio-9.jpg": "/static/media/portfolio-9.5ba3adb9c4c3682d02c7.jpg",
+    "static/media/portfolio-3.jpg": "/static/media/portfolio-3.579b05bc799a4d0aa1a1.jpg",
+    "static/media/portfolio-1.jpg": "/static/media/portfolio-1.2aab770221e7ed8558ff.jpg",
+    "static/media/portfolio-8.jpg": "/static/media/portfolio-8.a3a9bbefd885f72b74d4.jpg",
+    "static/media/portfolio-6.jpg": "/static/media/portfolio-6.edba94e0f146bcab3c43.jpg",
+    "static/media/portfolio-5.jpg": "/static/media/portfolio-5.2668a8576c83ca541bc9.jpg",
+    "static/media/portfolio-7.jpg": "/static/media/portfolio-7.bff00bd53bae7327d3a6.jpg",
+    "static/media/portfolio-2.jpg": "/static/media/portfolio-2.07b6f4b6007250929a94.jpg",
+    "static/media/portfolio-4.jpg": "/static/media/portfolio-4.de7727ecf33ccd5ccfbf.jpg",
+    "static/media/logo_mimos.png": "/static/media/logo_mimos.95ad942d38f09596bb17.png",
+    "static/media/resume_Badrul-Amin-Hairul-Kholidin.pdf": "/static/media/resume_Badrul-Amin-Hairul-Kholidin.172a73713c7e406b72fa.pdf",
+    "static/media/cover-letter_Badrul-Amin-Hairul-Kholidin.pdf": "/static/media/cover-letter_Badrul-Amin-Hairul-Kholidin.1a8214e394d5b20671d6.pdf",
+    "static/media/img-profile.jpeg": "/static/media/img-profile.e9b2e73be8b9c034d845.jpeg",
+    "static/media/logo_kpm.png": "/static/media/logo_kpm.03e3aa7c87c6c48756f5.png",
+    "index.html": "/index.html",
+    "main.10d6c9d6.css.map": "/static/css/main.10d6c9d6.css.map",
+    "main.04fb3660.js.map": "/static/js/main.04fb3660.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.10d6c9d6.css",
+    "static/js/main.04fb3660.js"
+  ]
+}

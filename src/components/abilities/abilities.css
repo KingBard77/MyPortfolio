@@ -1,0 +1,135 @@
+.abilities__container {
+    grid-template-columns: 320px 320px;
+    column-gap: 3rem;
+    justify-content: center;
+    display: grid;
+}
+
+.skills__header {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    column-gap: 1rem;
+}
+
+.skills__header:not(:last-child) {
+    margin-bottom: var(--mb-2-5);
+}
+
+.skills__icon,
+.skills__arrow {
+    font-size: 2rem;
+    color: var(--skin-color);
+}
+
+.skills__icon {
+    margin-right: var(--mb-0-75);
+}
+
+.skills__title {
+    font-size: var(--h3-font-size);
+    font-weight: var(--font-medium);
+}
+
+.skills__subtitle {
+    font-size: var(--small-font-size);
+}
+
+.skills__arrow {
+    margin-left: auto;
+}
+
+.skills__active .skills__arrow {
+    transform: rotate(-90deg);
+    transition: .3s;
+}
+
+.skills__content [data-content] {
+    display: none;
+}
+
+.skills__active[data-content] {
+    display: block;
+}
+
+.skills__list {
+    row-gap: 1.8rem;
+    display: grid;
+}
+
+.skills__titles {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: var(--mb-0-5);
+}
+
+
+.skills__name {
+    font-size: var(--normal-font-size);
+    font-weight: var(--font-medium);
+    flex: 1;
+    text-align: left;
+}
+
+
+.skills__bar,
+.skills__percentage {
+    height: 5px;
+    border-radius: .25rem;
+}
+
+.skills__number {
+    white-space: nowrap;
+    font-size: var(--smaller-font-size);
+    text-align: right;
+}
+
+
+.skills__bar {
+    background-color: var(--box-color);
+}
+
+.skills__data_icon {
+    font-size: 1.5rem;
+    min-width: 1.5rem;
+    color: var(--skin-color);
+}
+
+.skills__percentage {
+    display: block;
+    background-color: var(--skin-color);
+}
+
+
+/* ========= MEDIA QUARIES (MEDIUM DEVICES) ========= */
+
+@media screen and (max-width: 1024px) {
+    .abilities__container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .skills_tabs {
+        width: 100%;
+        margin: 0 auto;
+        padding: 2rem;
+        margin-bottom: var(--mb-2);
+    }
+    .skills__content {
+        padding: 1rem;
+    }
+}
+
+
+/* ========= MEDIA QUARIES (SMALL DEVICES) ========= */
+
+@media screen and (max-width: 600px) {
+    .abilities__container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .skills_tabs {
+        width: 100%;
+        padding: 2rem 1rem;
+    }
+}

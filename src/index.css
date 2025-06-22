@@ -1,0 +1,185 @@
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+    * {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        box-sizing: border-box;
+        list-style: none;
+        text-decoration: none;
+    }
+    
+     :root {
+        /*===== Colors =====*/
+        --hue-color: 242;
+        /* HSL Color Mode */
+         --skin-color: #a8c3a0;                     /* Sage Green */
+         --color-text: #f3f3f3;                     /* Light text */
+         --color-white: #ffffff;                    /* True white */
+         --color-bg: #0d0d0d;                       /* Dark background */
+         --box-color: #1a1a1a;                      /* Card/section background */
+         --scroll-bar-color: #2e2e2e;               /* Scroll track */
+         --scroll-thumb-color: #b29f8d;             /* Latte scroll thumb accent */
+        /*===== Font and Typography =====*/
+        --body-font: 'Poppins', sans-serif;
+        /* .5rem = 8px, 1rem = 16px, 1.5rem = 24px ... */
+        --biggest-font-size: 3rem;
+        --h1-font-size: 2.25rem;
+        --h2-font-size: 1.5rem;
+        --h3-font-size: 1.25rem;
+        --normal-font-size: 1rem;
+        --small-font-size: .875rem;
+        --smaller-font-size: .813rem;
+        /*===== Font Weight =====*/
+        --font-medium: 500;
+        --font-bold: 600;
+        /*===== Margenes Bottom =====*/
+        --mb-0-25: .25rem;
+        --mb-0-5: .5rem;
+        --mb-0-75: .75rem;
+        --mb-1: 1rem;
+        --mb-1-5: 1.5rem;
+        --mb-2: 2rem;
+        --mb-2-5: 2.5rem;
+        --mb-3: 3rem;
+        /*===== Z Index =====*/
+        --z-fixed: 10;
+        --z-modal: 100;
+        /*===== Container Margenes =====*/
+        --container-width-lg: 75%;
+        --container-width-md: 86%;
+        --container-width-sm: 90%;
+    }
+
+    html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 7rem; /* Matches your header's padding-top */
+    }
+
+    
+     ::-webkit-scrollbar {
+        display: none;
+    }
+    
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: var(--color-bg);
+        color: var(--color-white);
+        line-height: 1.7;
+    }
+    /* ========= GENERAL STYLE ========= */
+    
+    .container {
+        width: var(--container-width-lg);
+        margin: 0 auto;
+    }
+    
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+        font-weight: var(--font-bold);
+    }
+    
+    h1 {
+        font-size: 2.5rem;
+    }
+    
+    section {
+        margin-top: 8rem;
+    }
+    
+    section>h2,
+    section>h5 {
+        text-align: center;
+        color: var(--skin-color);
+    }
+    
+    section>h2 {
+        color: var(--color-white);
+        margin-bottom: 3rem;
+    }
+
+    .text-light {
+        color: var(--color-light);
+    }
+    
+    a {
+        color: var(--color-white);
+        transition: var(--transition);
+    }
+    
+    a:hover {
+        color: var(--skin-color);
+    }
+
+    .btn {
+        width: max-content;
+        display: inline-block;
+        color: var(--color-white);
+        padding: 0.75rem 1.2rem;
+        border-radius: 0.4rem;
+        cursor: pointer;
+        font-weight: var(--font-medium);
+        border: 1px solid var(--skin-color);
+        transition: var(--transition);
+        z-index: 1;
+    }
+
+    .btn:hover {
+        background: var(--color-white);
+        color: var(--color-bg);
+        border-color: transparent;
+    }
+
+    .btn-primary {
+        background: var(--skin-color);
+        color: var(--color-white);
+        font-size: 0.9rem;
+    }
+
+    .btn-primary:hover {
+        background: transparent;
+        border-color: var(--skin-color);
+        color: var(--color-white);
+    }
+
+    .btn-secondary {
+        background-color: white;
+        color: black;
+        border: 1px solid black;
+        font-size: 0.9rem;
+    }
+
+    .btn-secondary:hover {
+        background-color: black;
+        color: white;
+        border-color: transparent;
+    }
+
+    img {
+        display: block;
+        width: 100%;
+        object-fit: cover;
+    }
+    /* ========= MEDIA QUARIES (MEDIUM DEVICES) ========= */
+    
+    @media screen and (max-width: 1024px) {
+        .container {
+            width: var(--container-width-md);
+        }
+        section {
+            margin-top: 6rem;
+        }
+    }
+    /* ========= MEDIA QUARIES (SMALL DEVICES) ========= */
+    
+    @media screen and (max-width: 600px) {
+        .container {
+            width: var(--container-width-sm);
+        }
+        section>h2 {
+            margin-bottom: 2rem;
+        }
+    }

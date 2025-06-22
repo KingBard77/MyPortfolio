@@ -1,0 +1,115 @@
+footer {
+    background: var(--box-color);
+    padding: 3rem;
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: 7rem;
+}
+
+footer a {
+    color: var(--color-white);
+}
+
+.footer__logo {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    display: inline-block;
+}
+
+.parmalinks {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin: 0 auto 3rem;
+}
+
+.home__social {
+    display: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 4rem;
+}
+
+.home__social-follow {
+    color: var(--color-white);
+    font-size: 0.9rem;
+    font-weight: var(--font-medium);
+    padding-right: 8.175rem;
+    position: relative;
+}
+
+.home__social-follow::after {
+    content: '';
+    position: absolute;
+    right: 1rem;
+    top: 58%;
+    width: 80px;
+    height: 2px;
+    background-color: var(--skin-color);
+    margin: -1px;
+}
+
+.home__social-links {
+    display: inline-flex;
+    column-gap: .5rem;
+}
+
+.home__social-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 1rem .875rem .875rem;
+    border-radius: .75rem;
+    border: 1px solid var(--skin-color);
+    background: var(--color-bg);
+    color: var(--color-white);
+}
+
+.home__social-link i {
+    text-align: center;
+    transition: .4s;
+}
+
+.home__social-link span {
+    display: inline-block;
+    font-size: var(--smaller-font-size);
+    white-space: nowrap;
+    line-height: 14px;
+    transform: translateX(1rem);
+    max-width: 0;
+    overflow: hidden;
+    transition: 1.2s;
+}
+
+.home__social-link span::after {
+    content: '';
+    margin-right: 1rem;
+}
+
+.home__social-link:hover i,
+.home__social-link:hover span {
+    color: var(--color-white);
+}
+
+.home__social-link:hover span {
+    max-width: 400px;
+}
+
+.footer__copyright {
+    margin-bottom: 4rem;
+    color: var(--color-white)
+}
+
+
+/* ========= MEDIA QUARIES (SMALL DEVICES) ========= */
+
+@media screen and (max-width: 600px) {
+    .parmalinks {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    .footer__socials {
+        margin-bottom: 2.6rem;
+    }
+}
