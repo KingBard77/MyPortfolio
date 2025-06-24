@@ -50,11 +50,11 @@ const Header = () => {
                 deleteSpeed={50}
                 delaySpeed={1000}
                 words={[
-                  'Frontend Developer',
-                  'Web Developer',
-                  'App Developer',
-                  'UI/UX Designer',
+                  'Infra Architecture',
+                  'DevOps Specialist',
+                  'Cloud Administrator',
                   'Backend Developer',
+                  'Frontend Developer',
                 ]}
             />
           </span>
