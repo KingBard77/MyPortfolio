@@ -1,39 +1,76 @@
-#!/usr/bin/env bash
+#!/bin/bash
+set -e
 
-# Set colors for script output
-NC='\033[0m'
-SUCCESS='\033[0;32m'
-ERROR='\033[0;31m'
-WARNING='\033[0;33m'
-INFO='\033[0;34m'
+# COLORS
+BLUE='\033[0;34m'
+YELLOW='\033[0;33m'
+NC='\033[0m' # No Color
 
-echo -e "${INFO}##### Clean up ${NC}"
-rm node_nodules package-lock.json
+echo -e "${BLUE}##### Update & Install Prerequisites #####${NC}"
+apt update
+apt install -y curl build-essential python3-venv apt-transport-https ca-certificates nginx openssl
 
-echo -e "${INFO}##### Package: Update ${NC}"
-apt --assume-yes update
+echo -e "${BLUE}##### Node.js 20 Setup via NodeSource #####${NC}"
+curl -fsSL https://deb.nodesource.com/setup_20.x | -E bash -
+apt install -y nodejs
+npm install -g pm2
 
-echo -e "${INFO}##### Package: Upgrade ${NC}"
-apt --assume-yes upgrade
+echo -e "${BLUE}##### Clean node_modules and Old SASS #####${NC}"
+rm -rf node_modules package-lock.json
+npm uninstall node-sass || true
+npm uninstall -g node-sass || true
+npm cache clean --force
 
-echo -e "${INFO}##### Node.js: Install ${NC}"
-curl -fsSL https://deb.nodesource.com/setup_current.x | -E bash -
-apt --assume-yes install nodejs
-
-echo -e "${INFO}##### Python: Install ${NC}"
-sudo apt install python3-venv python3-full
-python3 -m venv .venv
-source .venv/bin/activate
-pip install setuptools
-
-echo -e "${INFO}##### Npm: Install ${NC}"
-apt --assume-yes install npm
+echo -e "${BLUE}##### Install Modern SASS and Dependencies #####${NC}"
+npm install sass --save
 npm install
-npm start
 
-echo -e "${INFO}##### Package: Verify ${NC}"
-node -v
-npm -v
+echo -e "${BLUE}##### Generate Self-Signed SSL Cert if Missing #####${NC}"
+mkdir -p /etc/nginx/ssl
+if [[ ! -f /etc/nginx/ssl/selfsigned.key || ! -f /etc/nginx/ssl/selfsigned.crt ]]; then
+    openssl req -x509 -nodes -days 365 \
+      -newkey rsa:2048 \
+      -keyout /etc/nginx/ssl/selfsigned.key \
+      -out /etc/nginx/ssl/selfsigned.crt \
+      -subj "/C=MY/ST=WP/L=KL/O=DevOrg/OU=Dev/CN=badrulamin.com"
+fi
 
-echo -e "${SUCCESS}#### Setup: Install Complete ${NC}"
+echo -e "${BLUE}##### Configure Nginx Reverse Proxy for HTTPS #####${NC}"
+tee /etc/nginx/sites-available/badrulamin.com >/dev/null <<EOF
+server {
+    listen 80;
+    server_name badrulamin.com www.badrulamin.com;
 
+    return 301 https://\$host\$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name badrulamin.com www.badrulamin.com;
+
+    ssl_certificate     /etc/nginx/ssl/selfsigned.crt;
+    ssl_certificate_key /etc/nginx/ssl/selfsigned.key;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+    }
+}
+EOF
+
+echo -e "${BLUE}##### Enable Nginx Site & Restart #####${NC}"
+ln -sf /etc/nginx/sites-available/badrulamin.com /etc/nginx/sites-enabled/
+nginx -t && systemctl restart nginx
+
+echo -e "${BLUE}##### PM2 Start React App #####${NC}"
+pm2 start npm --name myportfolio -- start
+pm2 save
+
+echo -e "${YELLOW}Setup complete. Visit: https://badrulamin.com${NC}"

@@ -37,27 +37,27 @@ const Header = () => {
             </motion.h5>
 
             <span className="home__subtitle">
-            Bachelor of Information Technology (Hons.) in Software Engineering
-          </span>
+              Bachelor of Information Technology (Hons.) in Software Engineering
+            </span>
             <br />
             and I'm a{' '}
             <span style={{ color: '#00a78e', fontWeight: 'bold' }}>
-            <Typewriter
-                loop={5}
-                cursor
-                cursorStyle="_"
-                typeSpeed={70}
-                deleteSpeed={50}
-                delaySpeed={1000}
-                words={[
-                  'Infra Architecture',
-                  'DevOps Specialist',
-                  'Cloud Administrator',
-                  'Backend Developer',
-                  'Frontend Developer',
-                ]}
-            />
-          </span>
+              <Typewriter
+                  words={[
+                    'Infra Architecture',
+                    'Cloud Administrator',
+                    'Backend Developer',
+                    'DevOps Specialist',
+                    'Frontend Developer',
+                  ]}
+                  loop={Infinity}
+                  cursor
+                  cursorStyle="_"
+                  typeSpeed={60}
+                  deleteSpeed={40}
+                  delaySpeed={100}
+              />
+            </span>
 
             <p className="home__description">
               I help our clients create <span>brands</span>, build digital{' '}

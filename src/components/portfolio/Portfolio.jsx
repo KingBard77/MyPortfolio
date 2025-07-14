@@ -1,5 +1,4 @@
-// Section  Portfolio
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './portfolio.css';
 
 // Section Icon
@@ -15,56 +14,110 @@ import {
 import data_portfolio from './conf/data_portfolio';
 
 // Import Component
-import Portfolio_card from './component/portfolio_card';
-import Portfolio_button from './component/portfolio_button';
+import PortfolioButton from './component/portfolio_button';
+import PortfolioCard from './component/portfolio_card';
 
 const Portfolio = () => {
-    const [item, setItem] = useState(data_portfolio);
-    const [filteredItems, setFilteredItems] = useState(data_portfolio);
-    const [currentItem, setCurrentItem] = useState(data_portfolio[0]);
+    const itemsPerPage = 6;
+    const [item, setItem] = useState([]);
+    const [filteredItems, setFilteredItems] = useState([]);
+    const [currentItem, setCurrentItem] = useState(null);
     const [activeCategory, setActiveCategory] = useState('All');
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [fullscreenImage, setFullscreenImage] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
 
     const allCategories = ['All', ...new Set(data_portfolio.map(item => item.category))];
 
-    const filterItem = (curcat) => {
-        setActiveCategory(curcat);
-        const newItem = curcat === 'All' ? data_portfolio : data_portfolio.filter(val => val.category === curcat);
-        setItem(newItem);
-        setFilteredItems(newItem);
-        setCurrentItem(newItem[0] || null);
+    const paginateItems = (items, page) => {
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        return items.slice(startIndex, endIndex);
     };
 
-    const currentItemIndex = filteredItems.findIndex(i => i.id === currentItem?.id);
+    const filterItem = (curcat) => {
+        setActiveCategory(curcat);
+        setCurrentPage(1);
+        const filtered = curcat === 'All'
+            ? data_portfolio
+            : data_portfolio.filter(val => val.category === curcat);
 
+        const paginatedItems = curcat === 'All'
+            ? paginateItems(filtered, 1)
+            : filtered;
+
+        setItem(paginatedItems);
+        setFilteredItems(filtered);
+        setCurrentItem(paginatedItems[0] || null);
+    };
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+        const paginatedItems = paginateItems(filteredItems, page);
+        setItem(paginatedItems);
+        setCurrentItem(paginatedItems[0] || null);
+    };
+
+    useEffect(() => {
+        filterItem('All');
+    }, []);
+
+    const currentItemIndex = filteredItems.findIndex(i => i.id === currentItem?.id);
     const prevItem = () => {
         if (!filteredItems.length) return;
         const prevIndex = (currentItemIndex - 1 + filteredItems.length) % filteredItems.length;
         setCurrentItem(filteredItems[prevIndex]);
     };
-
     const nextItem = () => {
         if (!filteredItems.length) return;
         const nextIndex = (currentItemIndex + 1) % filteredItems.length;
         setCurrentItem(filteredItems[nextIndex]);
     };
 
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                if (fullscreenImage) setFullscreenImage(null);
+                else if (isPopupOpen) setIsPopupOpen(false);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [fullscreenImage, isPopupOpen]);
+
+    const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+
     return (
         <section id='portfolio'>
             <h5>My Recent Works</h5>
             <h2>Portfolio</h2>
 
-            <Portfolio_button
+            <PortfolioButton
                 filterItem={filterItem}
                 menuItems={allCategories}
                 activeCategory={activeCategory}
             />
 
-            <Portfolio_card
+            <PortfolioCard
                 item={item}
                 setCurrentItem={setCurrentItem}
                 setIsPopupOpen={setIsPopupOpen}
             />
+
+            {/* Pagination */}
+            {activeCategory === 'All' && totalPages > 1 && (
+                <div className="portfolio__pagination">
+                    {Array.from({ length: totalPages }, (_, i) => (
+                        <button
+                            key={i + 1}
+                            className={`pagination__btn ${currentPage === i + 1 ? 'active' : ''}`}
+                            onClick={() => handlePageChange(i + 1)}
+                        >
+                            {i + 1}
+                        </button>
+                    ))}
+                </div>
+            )}
 
             {isPopupOpen && currentItem && (
                 <div className='portfolio__popup open'>
@@ -75,7 +128,13 @@ const Portfolio = () => {
                             </span>
 
                             <div className='pp__thumbnail'>
-                                <img src={currentItem.image} alt={currentItem.title} />
+                                <img
+                                    src={currentItem.image}
+                                    alt={currentItem.title}
+                                    onClick={() => setFullscreenImage(currentItem.image)}
+                                    className='clickable-image'
+                                />
+                                <p className="fullscreen__note">Click the image to view full screen</p>
                             </div>
 
                             <div className='portfolio__popup-info'>
@@ -124,6 +183,16 @@ const Portfolio = () => {
                             </div>
                         </div>
                     </div>
+                </div>
+            )}
+
+            {/* Fullscreen Image Overlay */}
+            {fullscreenImage && (
+                <div className="fullscreen-img-overlay">
+                    <span className="close-fullscreen" onClick={() => setFullscreenImage(null)}>
+                        <AiOutlineClose />
+                    </span>
+                    <img src={fullscreenImage} alt="Full View" />
                 </div>
             )}
         </section>

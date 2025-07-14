@@ -5,7 +5,8 @@ import About from './components/about/About'
 import Qualification from './components/qualification/Qualification'
 import Abilities from './components/abilities/Abilities'
 import Service from './components/service/Service'
-import Portfolio from './components/portfolio/Portfolio' 
+import Portfolio from './components/portfolio/Portfolio'
+import Gallery from './components/gallery/Gallery'
 import Testimonial from './components/testimonial/Testimonial'
 import Contact from './components/contact/Contact'
 import Footer from './components/footer/Footer'
@@ -22,6 +23,7 @@ const App = () => {
       <Service/>
       <Portfolio/>
       <Testimonial/>
+      <Gallery/>
       <Contact/>
       <Footer/>
     </Router>

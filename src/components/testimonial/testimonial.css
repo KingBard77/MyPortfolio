@@ -1,3 +1,4 @@
+/* ========== TESTIMONIAL BASE ========== */
 .container.testimonial__container {
     width: 40%;
     padding-bottom: 4rem;
@@ -43,23 +44,49 @@
     background: var(--skin-color);
 }
 
-
-/* ========= MEDIA QUARIES (MEDIUM DEVICES) ========= */
-
+/* ========== TABLET (≤1024px) ========== */
 @media screen and (max-width: 1024px) {
     .container.testimonial__container {
         width: 60%;
+        padding: 0 2rem 4rem;
+    }
+
+    .client__review {
+        width: 90%;
+        font-size: 0.95rem;
+    }
+
+    .testimonial__quote {
+        font-size: 1.4rem;
     }
 }
 
-
-/* ========= MEDIA QUARIES (SMALL DEVICES) ========= */
-
+/* ========== MOBILE (≤600px) ========== */
 @media screen and (max-width: 600px) {
     .container.testimonial__container {
         width: var(--container-width-sm);
+        padding: 0 1rem 3rem;
     }
+
+    .testimonial {
+        padding: 1.5rem;
+    }
+
     .client__review {
-        width: var(--container-width-sm);
+        width: 100%;
+        font-size: 0.9rem;
+    }
+
+    .testimonial__quote {
+        font-size: 1.25rem;
+    }
+
+    .client__avatar {
+        width: 3.5rem;
+        border-width: 0.3rem;
+    }
+
+    .client__detail {
+        font-size: var(--smaller-font-size);
     }
 }

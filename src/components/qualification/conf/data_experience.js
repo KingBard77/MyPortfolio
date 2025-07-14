@@ -4,7 +4,7 @@ const data_experience = [
     logo: require('../../../assets/qualification/experience/logo_mydid.jpg'),
     company: 'MYDIGITAL ID (MKN, JPM)',
     title: 'Infrastructure Engineer',
-    duration: 'Mar 2024 - Present (Full-Time)',
+    duration: 'Mar 24 - Present (Full-Time)',
     descriptions: [
       'Deploy and manage Linux servers for over 3 years, utilizing bash scripting to ensure optimal performance and security.',
       'Design and implement MyDID infrastructure solutions tailored to evolving business and security requirements.',
@@ -24,7 +24,7 @@ const data_experience = [
     logo: require('../../../assets/qualification/experience/logo_mimos.png'),
     company: 'MIMOS BERHAD',
     title: 'Associate Researcher',
-    duration: 'Mar 2023 – Mar 2024 (Full-Time)',
+    duration: 'Mar 23 – Mar 24 (Full-Time)',
     descriptions: [
       'Liaise from different stakeholders and agencies to gather user requirement and project into documentation.',
       'Focused on mastering Hyperledger Fabric up to the latest version using GIT for Halal Traceability development and utilize AWS services for managing IAM, EC2 instance on cloud infrastructure.',
@@ -38,7 +38,7 @@ const data_experience = [
     logo: require('../../../assets/qualification/experience/logo_mimos.png'),
     company: 'MIMOS BERHAD',
     title: 'Internship',
-    duration: 'Aug 2022 – Dec 2022 (Full-Time)',
+    duration: 'Aug 22 – Dec 22 (Full-Time)',
     descriptions: [
       'Proficient in developing decentralized applications using Hyperledger Fabric with Java, Golang, and Python languages.',
       'Design and develop of Halal Traceability and Authorized Economic Operator Systems, resulting in a remarkable 23% increase in overall development.',

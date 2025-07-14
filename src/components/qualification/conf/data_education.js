@@ -4,7 +4,7 @@ const data_education = [
     logo: require('../../../assets/qualification/education/logo_unikl.png'),
     courses: 'Bachelor of Software Engineering (Hons)',
     university: 'UniKL MIIT, Kampus Kota. Kuala Lumpur',
-    duration: 'Jul 2019 - Dec 2022',
+    duration: 'Jul 19 - Dec 22 (Full-Time)',
     descriptions: [
       'Dean List: 3 times (First Class Upper)',
       'CGPA: 3.55',
@@ -16,7 +16,7 @@ const data_education = [
     logo: require('../../../assets/qualification/education/logo_kpm.png'),
     courses: 'HND Business and ICT',
     university: 'MARA Professional College, Seri Iskandar. Perak',
-    duration: 'Dec 2017 - Mar 2019',
+    duration: 'Dec 17 - Mar 19 (Full-Time)',
     descriptions: [
       'Dean List: 3 times (Second Class Upper)',
       'CGPA: 3.83',
@@ -28,7 +28,7 @@ const data_education = [
     logo: require('../../../assets/qualification/education/logo_kpm.png'),
     courses: 'Foundation in Business',
     university: 'MARA Professional College, Seri Iskandar. Perak',
-    duration: 'Jul 2016 - Oct 2017',
+    duration: 'Jul 16 - Oct 17 (Full-Time)',
     descriptions: [
       'Dean List: 2 times',
       'CGPA: 3.09',

@@ -48,7 +48,23 @@ const Experience = () => {
       setActiveEducationModal(newActiveEducationModal);
     };
 
-  return (
+    // Escape key closes any active modal
+    React.useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                // Close all education modals
+                setActiveEducationModal(data_education.map(() => false));
+                // Close all experience modals
+                setActiveModal(data_experience.map(() => false));
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
+
+    return (
     <section id='qualification'>
       <h5>
         My Journey
@@ -77,30 +93,30 @@ const Experience = () => {
                     </span>
 
                     {/* Education Modal */}
-                    <div className={`modal ${activeEducationModal[index] ? 'active-modal' : ''}`}>
-                      <div className="modal-content">
-                        <span className="modal-close" onClick={() => handleEducationModalClose(index)}>
+                    <div className={`qualification__modal ${activeEducationModal[index] ? 'qualification__active-modal' : ''}`}>
+                      <div className="qualification__modal-content">
+                        <span className="qualification__modal-close" onClick={() => handleEducationModalClose(index)}>
                           <AiOutlineClose />
                         </span>
 
-                          <div className="modal-header">
-                              <div className="modal-title-container">
-                                  <div className="modal-logo-wrapper">
-                                      <img src={data_education[index].logo} alt={`${data_education[index].company} Logo`} className='modal-logo'/>
+                          <div className="qualification__modal-header">
+                              <div className="qualification__modal-title-container">
+                                  <div className="qualification__modal-logo-wrapper">
+                                      <img src={data_education[index].logo} alt={`${data_education[index].company} Logo`} className='qualification__modal-logo'/>
                                   </div>
-                                  <h3 className='modal-title'>{university}</h3>
+                                  <h3 className='qualification__modal-title'>{university}</h3>
                               </div>
                           </div>
 
-                          <p className='modal-subtitle'>
+                          <p className='qualification__modal-subtitle'>
                               <b>{courses}</b><br />
                           </p>
 
                           <ul className='qualification__modal-qualifications grid'>
                               {data_education[index].descriptions.map((desc, i) => (
                                   <li key={i}>
-                                      <BsDashLg className='modal-icon' />
-                                      <p className='modal-info'>{desc}</p>
+                                      <BsDashLg className='qualification__modal-icon' />
+                                      <p className='qualification__modal-info'>{desc}</p>
                                   </li>
                               ))}
                           </ul>
@@ -132,32 +148,32 @@ const Experience = () => {
                   <span className='qualification__button' onClick={() => handleModalToggle(index)}>
                       View More <BiChevronRight className='qualification__button-icon'/>
                     </span>
-      
+
                   {/* Experience Modal */}
-                  <div className={`modal ${activeModal[index] ? 'active-modal' : ''}`}>
-                    <div className="modal-content">
-                      <span className="modal-close" onClick={() => handleModalClose(index)}>
+                  <div className={`qualification__modal ${activeModal[index] ? 'qualification__active-modal' : ''}`}>
+                    <div className="qualification__modal-content">
+                      <span className="qualification__modal-close" onClick={() => handleModalClose(index)}>
                         <AiOutlineClose />
                       </span>
 
-                        <div className="modal-header">
-                            <div className="modal-title-container">
-                                <div className="modal-logo-wrapper">
-                                    <img src={data_experience[index].logo} alt={`${data_experience[index].company} Logo`} className='modal-logo'/>
+                        <div className="qualification__modal-header">
+                            <div className="qualification__modal-title-container">
+                                <div className="qualification__modal-logo-wrapper">
+                                    <img src={data_experience[index].logo} alt={`${data_experience[index].company} Logo`} className='qualification__modal-logo'/>
                                 </div>
-                                <h3 className='modal-title'>{company}</h3>
+                                <h3 className='qualification__modal-title'>{company}</h3>
                             </div>
                         </div>
 
-                        <p className='modal-subtitle'>
+                        <p className='qualification__modal-subtitle'>
                             <b>{data_experience[index].title}</b><br />
                         </p>
 
                         <ul className='qualification__modal-qualifications grid'>
                             {data_experience[index].descriptions.map((desc, i) => (
                                 <li key={i}>
-                                    <BsDashLg className='modal-icon' />
-                                    <p className='modal-info'>{desc}</p>
+                                    <BsDashLg className='qualification__modal-icon' />
+                                    <p className='qualification__modal-info'>{desc}</p>
                                 </li>
                             ))}
                         </ul>
@@ -166,7 +182,7 @@ const Experience = () => {
                 </div>
                 )
               })
-            } 
+            }
           </div>
         </div>
       </div>

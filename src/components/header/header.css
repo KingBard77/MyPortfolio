@@ -105,59 +105,7 @@ header {
     transform: translateX(0.25rem);
 }
 
-/* ===========================================================
-📱 MOBILE / PHONE VIEW (≤ 767px)
-=========================================================== */
-@media screen and (max-width: 767px) {
-    header {
-        background: none;
-        height: auto;
-        padding: 7rem 1rem 1rem 1rem;
-        overflow: initial;
-    }
-
-    .header__data {
-        text-align: center;
-        position: static;
-        margin: 0 auto;
-        padding: 0 1rem;
-    }
-
-    .home__title {
-        font-size: 2rem;
-    }
-
-    .home__subtitle {
-        font-size: 1.1rem;
-    }
-
-    .home__description {
-        font-size: 0.9rem;
-        line-height: 1.5rem;
-    }
-
-    .header__button {
-        flex-direction: row;
-        justify-content: center;
-        gap: 1rem;
-        flex-wrap: wrap;
-        margin-bottom: 3rem;
-    }
-
-    .btn {
-        width: auto;
-    }
-
-    .header__social,
-    .scroll__down,
-    .floating-div {
-        display: none;
-    }
-}
-
-/* ===========================================================
-📱 TABLET / IPAD VIEW (768px – 1024px)
-=========================================================== */
+/* ================= TABLET (≤1024px) ================= */
 @media screen and (min-width: 768px) and (max-width: 1024px) {
     header {
         height: 65vh;
@@ -215,3 +163,52 @@ header {
         display: block;
     }
 }
+
+/* ========== MOBILE (≤768px) ========== */
+@media screen and (max-width: 767px) {
+    header {
+        background: none;
+        height: auto;
+        padding: 7rem 1rem 1rem 1rem;
+        overflow: initial;
+    }
+
+    .header__data {
+        text-align: center;
+        position: static;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+
+    .home__title {
+        font-size: 2rem;
+    }
+
+    .home__subtitle {
+        font-size: 1.1rem;
+    }
+
+    .home__description {
+        font-size: 0.9rem;
+        line-height: 1.5rem;
+    }
+
+    .header__button {
+        flex-direction: row;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 3rem;
+    }
+
+    .btn {
+        width: auto;
+    }
+
+    .header__social,
+    .scroll__down,
+    .floating-div {
+        display: none;
+    }
+}
+
