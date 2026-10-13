@@ -1,6 +1,63 @@
+# Dependencies and generated output
 node_modules/
+/build/
+/dist/
+coverage/
+.nyc_output/
+
+# Tool caches
 .cache/
-dist/
-build/
+.vite/
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+
+# Local environment settings (see .env.example)
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Editor and operating-system metadata
+.idea/
+.vscode/
+*.iml
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+Thumbs.db
+Desktop.ini
+
+# Logs and temporary files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.swp
+*.swo
+*.tmp
+*.temp
+*~
+
+# Local Python environments
 .venv/
-deploy.log
+venv/
+__pycache__/
+*.py[cod]
+
+# Local agent state; task records belong in the external Dropbox workspace
+/codex/
+.codex/
+.claude/
+AGENTS.md
+
+# Local workstation bootstrap
+/setup
+
+# Local certificates and private keys
+*.pem
+*.key
+*.p12
+*.pfx

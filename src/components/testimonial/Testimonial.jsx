@@ -1,55 +1,95 @@
-// Section Testimonial
-import React from 'react'
-import './testimonial.css'
-
-// Section Icon
-import { ImQuotesLeft } from 'react-icons/im'
-
-// import Swiper Core Module
-import { Pagination } from 'swiper';
+import { useReducedMotion } from 'framer-motion';
+import { useRef, useState } from 'react';
+import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
+import { FiMessageCircle } from 'react-icons/fi';
+import { ImQuotesLeft } from 'react-icons/im';
+import { A11y, Keyboard, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
-// Import Swiper Style
+import SectionHeading from '../shared/SectionHeading';
+
 import 'swiper/css';
-import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
+import testimonials from './data/testimonials';
+import './testimonial.css';
 
-// Section Conf
-import data_testimonial from './conf/data_testimonial';
-
+/**
+ * Presents existing client reviews in an accessible, manually controlled slider.
+ *
+ * @returns {React.ReactElement} The testimonials section.
+ */
 const Testimonial = () => {
+  const sliderRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const reducedMotion = useReducedMotion();
+
+  const navigate = (direction) => {
+    sliderRef.current?.slideTo(
+      (activeIndex + direction + testimonials.length) % testimonials.length,
+    );
+  };
+
   return (
-      <section id='testimonial'>
-        <h5>Review from clients</h5>
-        <h2>Testimonial</h2>
-
-        <Swiper
-            className="container testimonial__container"
-            modules={[Pagination]}
-            spaceBetween={40}
+    <section id="testimonial" aria-labelledby="testimonial-title">
+      <div className="container testimonial__container">
+        <div className="testimonial__heading">
+          <SectionHeading
+            id="testimonial-title"
+            eyebrow="Review from clients"
+            title="Good work."
+            accent="Kind words."
+            description="Feedback from the people I’ve worked with."
+            icon={FiMessageCircle}
+          />
+        </div>
+        <div className="testimonial__showcase">
+          <Swiper
+            modules={[A11y, Keyboard, Pagination]}
+            spaceBetween={24}
             slidesPerView={1}
+            speed={reducedMotion ? 0 : 500}
+            keyboard={{ enabled: true, onlyInViewport: true }}
             pagination={{ clickable: true }}
-        >
-          {
-            data_testimonial.map(({ avatar, name, detail, review }, index) => (
-                <SwiperSlide key={index} className='testimonial'>
-                  <div className="testimonial__quote">
-                    <ImQuotesLeft />
-                  </div>
-                  <div className="client__avatar">
-                    <img src={avatar} alt={`Avatar of ${name}`} />
-                  </div>
+            onSwiper={(swiper) => {
+              sliderRef.current = swiper;
+            }}
+            onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+            aria-label="Client testimonials"
+          >
+            {testimonials.map(({ avatar, name, detail, review }) => (
+              <SwiperSlide key={name}>
+                <figure className="testimonial__card">
+                  <ImQuotesLeft className="testimonial__quote" aria-hidden="true" />
+                  <blockquote>{review}</blockquote>
+                  <figcaption>
+                    <img src={avatar} alt={name} loading="lazy" />
+                    <div>
+                      <strong>{name}</strong>
+                      <span>{detail}</span>
+                    </div>
+                  </figcaption>
+                </figure>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+          <div className="testimonial__controls">
+            <span aria-live="polite">
+              {String(activeIndex + 1).padStart(2, '0')}{' '}
+              <span>/ {String(testimonials.length).padStart(2, '0')}</span>
+            </span>
+            <div>
+              <button type="button" aria-label="Previous testimonial" onClick={() => navigate(-1)}>
+                <AiOutlineLeft aria-hidden="true" />
+              </button>
+              <button type="button" aria-label="Next testimonial" onClick={() => navigate(1)}>
+                <AiOutlineRight aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
 
-                  <h5 className='client__name'>{name}</h5>
-                  <h3 className='client__detail'>{detail}</h3>
-                  <small className='client__review'>{review}</small>
-                </SwiperSlide>
-            ))
-          }
-        </Swiper>
-      </section>
-  )
-}
-
-export default Testimonial
+export default Testimonial;

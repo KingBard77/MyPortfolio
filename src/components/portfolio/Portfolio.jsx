@@ -1,202 +1,280 @@
-import React, { useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
+import {
+  AiOutlineClose,
+  AiOutlineLeft,
+  AiOutlineRight,
+  AiFillYoutube,
+  AiFillGithub,
+} from 'react-icons/ai';
+import { FiGrid, FiMaximize2, FiArrowUpRight } from 'react-icons/fi';
+
+import SectionHeading from '../shared/SectionHeading';
+import { useDialog } from '../shared/useDialog';
+
+import PortfolioButton from './components/PortfolioButton';
+import PortfolioCard from './components/PortfolioCard';
+import portfolioProjects from './data/portfolio';
 import './portfolio.css';
 
-// Section Icon
-import {
-    AiOutlineClose,
-    AiOutlineLeft,
-    AiOutlineRight,
-    AiFillYoutube,
-    AiFillGithub
-} from 'react-icons/ai';
+const ProjectDetails = ({ project, onClose, onNavigate, count, index }) => {
+  const [expanded, setExpanded] = useState(false);
+  const dialogProps = useDialog({
+    onClose,
+    fallbackFocusSelector: '.portfolio__carousel',
+    onCancel: () => {
+      if (expanded) {
+        setExpanded(false);
+      } else {
+        onClose();
+      }
+    },
+  });
 
-// Import conf
-import data_portfolio from './conf/data_portfolio';
+  return createPortal(
+    <dialog
+      {...dialogProps}
+      className={`portfolio-dialog${expanded ? ' portfolio-dialog--expanded' : ''}`}
+      aria-labelledby="portfolio-dialog-title"
+    >
+      <div className="portfolio-dialog__header">
+        <span>
+          {project.category} / PROJECT {String(index + 1).padStart(2, '0')}
+        </span>
+        <button type="button" onClick={onClose} aria-label="Close project details" autoFocus>
+          <AiOutlineClose aria-hidden="true" />
+        </button>
+      </div>
+      <div className="portfolio-dialog__body">
+        <button
+          className="portfolio-dialog__image"
+          type="button"
+          onClick={() => setExpanded(!expanded)}
+          aria-label={expanded ? 'Return to project information' : 'Enlarge project image'}
+        >
+          <img src={project.image} alt={project.title} />
+          <span>
+            <FiMaximize2 aria-hidden="true" /> {expanded ? 'Back to project' : 'Enlarge image'}
+          </span>
+        </button>
+        <div className="portfolio-dialog__copy" hidden={expanded}>
+          <h2 id="portfolio-dialog-title">{project.title}</h2>
+          <div className="portfolio-dialog__summary">
+            {[
+              ['Objective', project.objective],
+              ['Scope', project.scope],
+              ['Outcome', project.outcome],
+            ].map(([label, content]) => (
+              <div className="portfolio-dialog__summary-item" key={label}>
+                <h3>{label}</h3>
+                <p>{content}</p>
+              </div>
+            ))}
+          </div>
+          <dl>
+            <div>
+              <dt>Created</dt>
+              <dd>{project.created}</dd>
+            </div>
+            <div>
+              <dt>My role</dt>
+              <dd>{project.role}</dd>
+            </div>
+            <div>
+              <dt>Technologies</dt>
+              <dd>{project.language}</dd>
+            </div>
+          </dl>
+          <div className="portfolio-dialog__links">
+            {/^https?:\/\//.test(project.github || '') && (
+              <a href={project.github} target="_blank" rel="noreferrer">
+                <AiFillGithub aria-hidden="true" /> GitHub <FiArrowUpRight aria-hidden="true" />
+              </a>
+            )}
+            {/^https?:\/\//.test(project.youtube || '') && (
+              <a href={project.youtube} target="_blank" rel="noreferrer">
+                <AiFillYoutube aria-hidden="true" /> Watch demo{' '}
+                <FiArrowUpRight aria-hidden="true" />
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="portfolio-dialog__navigation">
+        <button
+          type="button"
+          onClick={() => {
+            setExpanded(false);
+            onNavigate(-1);
+          }}
+          disabled={count < 2}
+        >
+          <AiOutlineLeft aria-hidden="true" /> Previous
+        </button>
+        <span aria-live="polite">
+          {index + 1} / {count}
+        </span>
+        <button
+          type="button"
+          onClick={() => {
+            setExpanded(false);
+            onNavigate(1);
+          }}
+          disabled={count < 2}
+        >
+          Next <AiOutlineRight aria-hidden="true" />
+        </button>
+      </div>
+    </dialog>,
+    document.body,
+  );
+};
 
-// Import Component
-import PortfolioButton from './component/portfolio_button';
-import PortfolioCard from './component/portfolio_card';
-
+/**
+ * Renders a filterable project showcase with animated card navigation.
+ *
+ * @returns {React.ReactElement} The portfolio carousel and project detail dialog.
+ */
 const Portfolio = () => {
-    const itemsPerPage = 6;
-    const [item, setItem] = useState([]);
-    const [filteredItems, setFilteredItems] = useState([]);
-    const [currentItem, setCurrentItem] = useState(null);
-    const [activeCategory, setActiveCategory] = useState('All');
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
-    const [fullscreenImage, setFullscreenImage] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [pageSize, setPageSize] = useState(4);
+  const [{ index, direction }, setSlide] = useState({ index: 0, direction: 1 });
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [detailIndex, setDetailIndex] = useState(0);
+  const categories = useMemo(
+    () => ['All', ...new Set(portfolioProjects.map((project) => project.category))],
+    [],
+  );
+  const projects = useMemo(
+    () =>
+      activeCategory === 'All'
+        ? portfolioProjects
+        : portfolioProjects.filter((project) => project.category === activeCategory),
+    [activeCategory],
+  );
+  const currentProject = projects[index] || projects[0];
 
-    const allCategories = ['All', ...new Set(data_portfolio.map(item => item.category))];
+  const grouped = activeCategory !== 'All';
+  const pageCount = grouped ? Math.ceil(projects.length / pageSize) : projects.length;
+  const visibleProjects = grouped
+    ? projects.slice(index, index + pageSize)
+    : currentProject
+      ? [currentProject]
+      : [];
 
-    const paginateItems = (items, page) => {
-        const startIndex = (page - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        return items.slice(startIndex, endIndex);
-    };
+  const navigate = (step) => {
+    if (pageCount < 2) {
+      return;
+    }
+    setSlide((previous) => {
+      const page = grouped ? Math.floor(previous.index / pageSize) : previous.index;
+      const nextPage = (page + step + pageCount) % pageCount;
+      return { index: grouped ? nextPage * pageSize : nextPage, direction: step > 0 ? 1 : -1 };
+    });
+  };
 
-    const filterItem = (curcat) => {
-        setActiveCategory(curcat);
-        setCurrentPage(1);
-        const filtered = curcat === 'All'
-            ? data_portfolio
-            : data_portfolio.filter(val => val.category === curcat);
+  const handleCategoryChange = (category) => {
+    setActiveCategory(category);
+    setSlide({ index: 0, direction: 1 });
+  };
 
-        const paginatedItems = curcat === 'All'
-            ? paginateItems(filtered, 1)
-            : filtered;
-
-        setItem(paginatedItems);
-        setFilteredItems(filtered);
-        setCurrentItem(paginatedItems[0] || null);
-    };
-
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
-        const paginatedItems = paginateItems(filteredItems, page);
-        setItem(paginatedItems);
-        setCurrentItem(paginatedItems[0] || null);
-    };
-
-    useEffect(() => {
-        filterItem('All');
-    }, []);
-
-    const currentItemIndex = filteredItems.findIndex(i => i.id === currentItem?.id);
-    const prevItem = () => {
-        if (!filteredItems.length) return;
-        const prevIndex = (currentItemIndex - 1 + filteredItems.length) % filteredItems.length;
-        setCurrentItem(filteredItems[prevIndex]);
-    };
-    const nextItem = () => {
-        if (!filteredItems.length) return;
-        const nextIndex = (currentItemIndex + 1) % filteredItems.length;
-        setCurrentItem(filteredItems[nextIndex]);
-    };
-
-    useEffect(() => {
-        const handleKeyDown = (e) => {
-            if (e.key === 'Escape') {
-                if (fullscreenImage) setFullscreenImage(null);
-                else if (isPopupOpen) setIsPopupOpen(false);
+  return (
+    <section id="portfolio" aria-labelledby="portfolio-title">
+      <div className="container portfolio__container">
+        <div className="portfolio__heading">
+          <SectionHeading
+            id="portfolio-title"
+            eyebrow="My recent works"
+            title="Featured"
+            accent="Work"
+            description="From web applications to infrastructure automation."
+            icon={FiGrid}
+          />
+        </div>
+        <PortfolioButton
+          onCategoryChange={handleCategoryChange}
+          menuItems={categories}
+          activeCategory={activeCategory}
+        />
+        {grouped && (
+          <div className="portfolio__page-size" role="group" aria-label="Cards per page">
+            <span>Cards per page</span>
+            {[2, 4, 6, 8].map((size) => (
+              <button
+                key={size}
+                type="button"
+                aria-pressed={pageSize === size}
+                onClick={() => {
+                  setPageSize(size);
+                  setSlide({ index: 0, direction: 1 });
+                }}
+              >
+                {size}
+              </button>
+            ))}
+          </div>
+        )}
+        <div
+          className="portfolio__carousel"
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="Featured projects"
+          tabIndex={0}
+          onKeyDown={(event) => {
+            if (event.target.closest('select, input, textarea')) {
+              return;
             }
-        };
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [fullscreenImage, isPopupOpen]);
-
-    const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
-
-    return (
-        <section id='portfolio'>
-            <h5>My Recent Works</h5>
-            <h2>Portfolio</h2>
-
-            <PortfolioButton
-                filterItem={filterItem}
-                menuItems={allCategories}
-                activeCategory={activeCategory}
-            />
-
-            <PortfolioCard
-                item={item}
-                setCurrentItem={setCurrentItem}
-                setIsPopupOpen={setIsPopupOpen}
-            />
-
-            {/* Pagination */}
-            {activeCategory === 'All' && totalPages > 1 && (
-                <div className="portfolio__pagination">
-                    {Array.from({ length: totalPages }, (_, i) => (
-                        <button
-                            key={i + 1}
-                            className={`pagination__btn ${currentPage === i + 1 ? 'active' : ''}`}
-                            onClick={() => handlePageChange(i + 1)}
-                        >
-                            {i + 1}
-                        </button>
-                    ))}
-                </div>
-            )}
-
-            {isPopupOpen && currentItem && (
-                <div className='portfolio__popup open'>
-                    <div className='portfolio__popup-inner'>
-                        <div className='portfolio__popup-content'>
-                            <span className='portfolio__popup-close' onClick={() => setIsPopupOpen(false)}>
-                                <AiOutlineClose />
-                            </span>
-
-                            <div className='pp__thumbnail'>
-                                <img
-                                    src={currentItem.image}
-                                    alt={currentItem.title}
-                                    onClick={() => setFullscreenImage(currentItem.image)}
-                                    className='clickable-image'
-                                />
-                                <p className="fullscreen__note">Click the image to view full screen</p>
-                            </div>
-
-                            <div className='portfolio__popup-info'>
-                                <div className='portfolio__popup-body'>
-                                    <h3 className='details__title'>{currentItem.title}</h3>
-                                    <p className='details__description'>{currentItem.description}</p>
-                                    <ul className='details__info'>
-                                        <li>Created - <span>{currentItem.created}</span></li>
-                                        <li>Language - <span>{currentItem.language}</span></li>
-                                        <li>Role - <span>{currentItem.role}</span></li>
-                                        <li>
-                                            <AiFillYoutube className='portfolio__button-icon' />
-                                            {currentItem.youtube && currentItem.youtube !== 'Not Available' ? (
-                                                <a href={currentItem.youtube} target='_blank' rel='noreferrer'>YouTube</a>
-                                            ) : (
-                                                <span className='link__na'>YouTube: Not Available</span>
-                                            )}
-                                        </li>
-                                        <li>
-                                            <AiFillGithub className='portfolio__button-icon' />
-                                            {currentItem.github && currentItem.github !== 'Not Available' ? (
-                                                <a href={currentItem.github} target='_blank' rel='noreferrer'>GitHub</a>
-                                            ) : (
-                                                <span className='link__na'>GitHub: Not Available</span>
-                                            )}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div className='navigation'>
-                                <div className='portfolio__controls'>
-                                    <div className='prev__item' onClick={prevItem}>
-                                        <AiOutlineLeft />
-                                    </div>
-
-                                    <div className='caption__content'>
-                                        <div className='caption__text'>{currentItem.category}</div>
-                                        <div className='caption__counter'>{currentItemIndex + 1} of {filteredItems.length}</div>
-                                    </div>
-
-                                    <div className='next__item' onClick={nextItem}>
-                                        <AiOutlineRight />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Fullscreen Image Overlay */}
-            {fullscreenImage && (
-                <div className="fullscreen-img-overlay">
-                    <span className="close-fullscreen" onClick={() => setFullscreenImage(null)}>
-                        <AiOutlineClose />
-                    </span>
-                    <img src={fullscreenImage} alt="Full View" />
-                </div>
-            )}
-        </section>
-    );
+            if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+              event.preventDefault();
+              navigate(event.key === 'ArrowRight' ? 1 : -1);
+            }
+          }}
+        >
+          <div className="portfolio__carousel-toolbar">
+            <span>
+              {grouped ? 'PROJECTS' : 'PROJECT'} {String(index + 1).padStart(2, '0')}
+              {grouped &&
+                `–${String(Math.min(index + pageSize, projects.length)).padStart(2, '0')}`}{' '}
+              <span>/ {String(projects.length).padStart(2, '0')}</span>
+            </span>
+            <span>{pageCount > 1 ? 'Swipe or use the arrows' : activeCategory}</span>
+          </div>
+          <PortfolioCard
+            item={visibleProjects}
+            setCurrentItem={(project) =>
+              setDetailIndex(projects.findIndex((candidate) => candidate.id === project.id))
+            }
+            setIsPopupOpen={setIsPopupOpen}
+            direction={direction}
+            onNavigate={navigate}
+            canNavigate={pageCount > 1}
+            compact={grouped}
+          />
+          <span
+            className="portfolio__announcement"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            {grouped
+              ? `Showing projects ${index + 1} through ${Math.min(index + pageSize, projects.length)} of ${projects.length}`
+              : `${index + 1} of ${projects.length}: ${currentProject?.title || ''}`}
+          </span>
+        </div>
+      </div>
+      {isPopupOpen && projects[detailIndex] && (
+        <ProjectDetails
+          project={projects[detailIndex]}
+          index={detailIndex}
+          count={projects.length}
+          onClose={() => setIsPopupOpen(false)}
+          onNavigate={(step) =>
+            setDetailIndex((previous) => (previous + step + projects.length) % projects.length)
+          }
+        />
+      )}
+    </section>
+  );
 };
 
 export default Portfolio;

@@ -1,149 +1,171 @@
-import React, { useState, useEffect } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { useState } from 'react';
+import { createPortal } from 'react-dom';
+import { AiOutlineClose, AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
+import { FiCamera, FiMaximize2, FiCopy, FiDownload } from 'react-icons/fi';
+
+import SectionHeading from '../shared/SectionHeading';
+import { useDialog } from '../shared/useDialog';
+
+import galleryImages from './data/gallery';
 import './gallery.css';
 
-import photo1 from '../../assets/gallery/photo-1.jpg';
-import photo2 from '../../assets/gallery/photo-2.jpg';
-import photo3 from '../../assets/gallery/photo-3.jpg';
-import photo4 from '../../assets/gallery/photo-4.jpg';
-import photo5 from '../../assets/gallery/photo-5.jpg';
-import photo6 from '../../assets/gallery/photo-6.jpg';
-import photo7 from '../../assets/gallery/photo-7.jpg';
-import photo8 from '../../assets/gallery/photo-8.jpg';
-import photo9 from '../../assets/gallery/photo-9.jpg';
-import photo10 from '../../assets/gallery/photo-10.jpg';
-import photo11 from '../../assets/gallery/photo-11.jpg';
-import photo12 from '../../assets/gallery/photo-12.jpg';
-import photo13 from '../../assets/gallery/photo-13.jpg';
+const ImageViewer = ({ initialIndex, onClose }) => {
+  const [index, setIndex] = useState(initialIndex);
+  const [copyStatus, setCopyStatus] = useState(null);
+  const image = galleryImages[index];
 
-import { FaHeart, FaShareAlt, FaSearchPlus } from 'react-icons/fa';
-import { AiOutlineClose } from 'react-icons/ai';
-import { MdContentCopy } from 'react-icons/md';
-import { Tooltip } from 'react-tooltip';
+  const navigate = (step) => {
+    setIndex((previous) => (previous + step + galleryImages.length) % galleryImages.length);
+    setCopyStatus(null);
+  };
 
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(new URL(image.src, window.location.href).href);
+      setCopyStatus({ error: false, message: 'Image link copied.' });
+    } catch {
+      setCopyStatus({
+        error: true,
+        message: 'Could not copy the link. You can open or save the original image below.',
+      });
+    }
+  };
 
-const images = [
-    { src: photo1, title: 'Nature' },
-    { src: photo2, title: 'Waves' },
-    { src: photo3, title: 'Mountains' },
-    { src: photo4, title: 'Portrait' },
-    { src: photo5, title: 'Sky' },
-    { src: photo6, title: 'Reflection' },
-    { src: photo7, title: 'Greenery' },
-    { src: photo8, title: 'Sunset' },
-    { src: photo9, title: 'Lake View' },
-    { src: photo10, title: 'Urban Light' },
-    { src: photo11, title: 'Bloom' },
-    { src: photo12, title: 'Winter Scene' },
-    { src: photo13, title: 'Peaceful' },
-];
+  const handleKeyDown = (event) => {
+    if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+      event.preventDefault();
+      event.stopPropagation();
+      navigate(event.key === 'ArrowRight' ? 1 : -1);
+    }
+  };
+  const dialogProps = useDialog({
+    onClose,
+    onKeyDown: handleKeyDown,
+    fallbackFocusSelector: `[data-gallery-index="${initialIndex}"]`,
+  });
 
-const duplicatedImages = [...images, ...images];
+  return createPortal(
+    <dialog {...dialogProps} className="gallery-viewer" aria-labelledby="gallery-viewer-title">
+      <div className="gallery-viewer__header">
+        <div>
+          <span>THE GALLERY</span>
+          <h2 id="gallery-viewer-title">{image.title}</h2>
+        </div>
+        <button type="button" onClick={onClose} aria-label="Close photo viewer" autoFocus>
+          <AiOutlineClose aria-hidden="true" />
+        </button>
+      </div>
+      <div className="gallery-viewer__image">
+        <img src={image.viewer} alt={image.title} decoding="async" />
+      </div>
+      <div className="gallery-viewer__footer">
+        <div className="gallery-viewer__navigation">
+          <button type="button" onClick={() => navigate(-1)} aria-label="Previous photo">
+            <AiOutlineLeft aria-hidden="true" />
+          </button>
+          <span aria-live="polite">
+            {String(index + 1).padStart(2, '0')} / {galleryImages.length}
+          </span>
+          <button type="button" onClick={() => navigate(1)} aria-label="Next photo">
+            <AiOutlineRight aria-hidden="true" />
+          </button>
+        </div>
+        <div className="gallery-viewer__actions">
+          <button type="button" onClick={copyLink}>
+            <FiCopy aria-hidden="true" />
+            <span>Copy link</span>
+          </button>
+          <a
+            href={image.src}
+            download={`badrul-amin-${image.title.toLowerCase().replace(/\s+/g, '-')}.jpg`}
+          >
+            <FiDownload aria-hidden="true" />
+            <span>Original</span>
+          </a>
+        </div>
+      </div>
+      {copyStatus && (
+        <p
+          className={`gallery-viewer__status${copyStatus.error ? ' gallery-viewer__status--error' : ''}`}
+          role={copyStatus.error ? 'alert' : 'status'}
+        >
+          {copyStatus.message}
+        </p>
+      )}
+    </dialog>,
+    document.body,
+  );
+};
 
+/**
+ * Presents the original gallery collection in an animated masonry photo wall.
+ *
+ * @returns {React.ReactElement} The gallery and selected photo viewer.
+ */
 const Gallery = () => {
-    const [modalImage, setModalImage] = useState(null);
-    const [shareModal, setShareModal] = useState(null);
-    const [copied, setCopied] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const reducedMotion = useReducedMotion();
 
-    const handleZoom = (imgData) => setModalImage(imgData);
-    const handleCloseImageModal = () => setModalImage(null);
-    const handleShare = (imgData) => setShareModal(imgData);
-    const handleCloseShareModal = () => {
-        setCopied(false);
-        setShareModal(null);
-    };
-
-    const copyToClipboard = async (text) => {
-        try {
-            await navigator.clipboard.writeText(text);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-        } catch (err) {
-            console.error('Copy failed:', err);
-        }
-    };
-
-    useEffect(() => {
-        const escClose = (e) => {
-            if (e.key === 'Escape') {
-                setModalImage(null);
-                setShareModal(null);
-            }
-        };
-        window.addEventListener('keydown', escClose);
-        return () => window.removeEventListener('keydown', escClose);
-    }, []);
-
-    return (
-        <section id="gallery" className="gallery-section">
-            <h5>My Physical Touch</h5>
-            <h2 className="gallery-title">Gallery</h2>
-
-            <div className="gallery-marquee">
-                <div className="gallery-grid">
-                    {images.map((img, idx) => (
-                        <div key={idx} className="gallery-item">
-                            <img src={img.src} alt={img.title} className="gallery-image" />
-                            <div className="gallery-overlay">
-                                <div className="gallery-text-container">
-                                    <p className="gallery-text">{img.title}</p>
-                                    <div className="gallery-icons">
-                                        <FaHeart className="icon" />
-                                        <FaSearchPlus className="icon" onClick={() => handleZoom(img)} />
-                                        <FaShareAlt className="icon" onClick={() => handleShare(img)} />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            {/* 🔍 Image Modal */}
-            {modalImage && (
-                <div className="portfolio__popup open">
-                    <div className="portfolio__popup-inner">
-            <span className="portfolio__popup-close" onClick={handleCloseImageModal}>
-              <AiOutlineClose />
-            </span>
-                        <p className="popup-title">{modalImage.title}</p>
-                        <div className="pp__thumbnail">
-                            <img src={modalImage.src} alt={modalImage.title} />
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* 📤 Share Modal */}
-            {shareModal && (
-                <div className="portfolio__popup open">
-                    <div className="portfolio__popup-inner share">
-      <span className="portfolio__popup-close" onClick={handleCloseShareModal}>
-        <AiOutlineClose />
-      </span>
-
-                        <p className="popup-title">{shareModal.title}</p>
-
-                        <div className="popup-actions share-layout">
-                            <p className="copy-description">Click below to copy image link:</p>
-
-                            <div className="copy-wrapper">
-                                <div className="copy-box">
-                                    <code className="copy-url">{shareModal.src}</code>
-                                    <button className="copy-icon-btn" onClick={() => copyToClipboard(shareModal.src)}>
-                                        <MdContentCopy />
-                                    </button>
-                                </div>
-                                {copied && <span className="copy-toast">Copied!</span>}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-
-
-        </section>
-    );
+  return (
+    <section id="gallery" className="gallery-section" aria-labelledby="gallery-title">
+      <div className="container gallery__container">
+        <div className="gallery__heading">
+          <SectionHeading
+            id="gallery-title"
+            eyebrow="Beyond the screen"
+            title="A different"
+            accent="Perspective"
+            description="Moments, places, and details beyond the screen."
+            icon={FiCamera}
+          />
+        </div>
+        <div className="gallery__toolbar">
+          <span>{String(galleryImages.length).padStart(2, '0')} PHOTOGRAPHS</span>
+          <span>Choose a frame to explore</span>
+        </div>
+        <div className="gallery__wall">
+          {galleryImages.map((image, index) => (
+            <motion.figure
+              className="gallery__frame"
+              key={image.title}
+              initial={reducedMotion ? false : { opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{ duration: 0.55, delay: reducedMotion ? 0 : (index % 3) * 0.06 }}
+            >
+              <button
+                type="button"
+                className="gallery__photo"
+                data-gallery-index={index}
+                onClick={() => setSelectedIndex(index)}
+                aria-label={`View ${image.title} photo`}
+              >
+                <img
+                  src={image.preview}
+                  alt={image.title}
+                  width={image.width}
+                  height={image.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span className="gallery__enlarge" aria-hidden="true">
+                  <FiMaximize2 />
+                </span>
+              </button>
+              <figcaption>
+                <span>{image.title}</span>
+                <span>{String(index + 1).padStart(2, '0')}</span>
+              </figcaption>
+            </motion.figure>
+          ))}
+        </div>
+      </div>
+      {selectedIndex !== null && (
+        <ImageViewer initialIndex={selectedIndex} onClose={() => setSelectedIndex(null)} />
+      )}
+    </section>
+  );
 };
 
 export default Gallery;

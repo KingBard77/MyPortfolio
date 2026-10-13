@@ -1,0 +1,87 @@
+.greeting-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: #fff;
+  background: #000;
+  transform: translateY(0);
+  transition: transform 0.7s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.greeting-intro--exiting {
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+
+.greeting-intro__word {
+  font-family: var(--body-font), sans-serif;
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  animation: greeting-appear 0.18s ease-out both;
+}
+
+.greeting-intro__skip {
+  position: absolute;
+  top: 1.5rem;
+  right: max(6%, 1.5rem);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid #ffffff30;
+  border-radius: 999px;
+  color: #c7cfcd;
+  background: transparent;
+  font: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.greeting-intro__skip:hover {
+  color: #fff;
+  border-color: #ffffff80;
+}
+
+.greeting-intro__skip:focus-visible {
+  outline: 2px solid #22ddc3;
+  outline-offset: 4px;
+}
+
+.greeting-intro__accessible {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@keyframes greeting-appear {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .greeting-intro {
+    display: none;
+    transition: none;
+  }
+
+  .greeting-intro__word {
+    animation: none;
+  }
+}

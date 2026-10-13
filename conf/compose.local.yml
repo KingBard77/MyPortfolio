@@ -1,0 +1,30 @@
+# MyPortfolio - local dev environment (Vite dev server with hot reload)
+# Run with: xxdockerbuild up myportfolio   (logs, down, restart, shell web)
+# PORT comes from conf/main.conf (xxdockerbuild passes it); the default keeps plain docker compose working.
+# The project is mounted at /workspace; nothing is copied into the image.
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: conf/Dockerfile
+      target: dev
+    image: myportfolio.local
+    init: true
+    command:
+      - bash
+      - -o
+      - pipefail
+      - -c
+      - npm ci --no-audit --no-fund && npm run dev -- --port ${PORT:-3000} --strictPort
+    ports:
+      - "127.0.0.1:${PORT:-3000}:${PORT:-3000}"
+    volumes:
+      - .:/workspace
+      # Keep Linux node_modules in a Docker volume so it never mixes with the macOS
+      # node_modules on the host or syncs to Dropbox
+      - node_modules:/workspace/node_modules
+
+volumes:
+  node_modules:
+    name: volume-myportfolio

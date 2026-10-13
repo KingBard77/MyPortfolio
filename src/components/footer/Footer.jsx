@@ -1,51 +1,86 @@
-import React from 'react'
-import './footer.css'
-import {FaFacebookF} from 'react-icons/fa'
-import {FiInstagram}  from 'react-icons/fi'
-import {IoLogoTwitter} from 'react-icons/io'
+import { BsGithub, BsLinkedin, BsInstagram } from 'react-icons/bs';
+import './footer.css';
 
-const Footer = () => {
-  return (
-    <footer>
-      <a href="#home" className='footer__logo'>Badrul Amin</a>
+const links = [
+  ['Home', 'home'],
+  ['About', 'about'],
+  ['Experience', 'qualification'],
+  ['Skills', 'abilities'],
+  ['Services', 'service'],
+  ['Work', 'portfolio'],
+  ['Gallery', 'gallery'],
+  ['Testimonials', 'testimonial'],
+  ['Contact', 'contact'],
+];
 
-      <ul className='parmalinks'>
-        <li><a href='#home'>Home</a></li>
-        <li><a href='#about'>About</a></li>
-        <li><a href='#abilities'>Abilities</a></li>
-        <li><a href='#qualification'>Qualification</a></li>
-        <li><a href='#service'>Service</a></li>
-        <li><a href='#portfolio'>Portfolio</a></li>
-        <li><a href='#testimonial'>Testimonial</a></li>
-        <li><a href='#contact'>Contact</a></li>
-      </ul>
-
-      <div className="home__social">
-        <span className='home__social-follow'>Follow me on</span>
-
-        <div className="home__social-links">
-          <a href="https://facebook.com" className='home__social-link'>
-            <FaFacebookF/>
-            <span>Like on Facebook</span>
+/**
+ * Renders portfolio navigation, existing social profiles, and copyright details.
+ *
+ * @returns {React.ReactElement} The site footer.
+ */
+const Footer = () => (
+  <footer className="site-footer">
+    <div className="container footer__container">
+      <div className="footer__top">
+        <div>
+          <a href="#home" className="footer__logo">
+            <span className="footer__brand-mark" aria-hidden="true">
+              B.
+            </span>
+            Badrul Amin<span>.</span>
           </a>
-
-          <a href="https://instagram.com" className='home__social-link'>
-            <FiInstagram/>
-            <span>Like on Instagram</span>
+          <p>Infrastructure. Automation. Thoughtful engineering.</p>
+        </div>
+        <a href="#home" className="footer__back-top">
+          <span>Back to top</span>
+          <span className="scroll__mouse" aria-hidden="true">
+            <span className="scroll__wheel" />
+          </span>
+        </a>
+      </div>
+      <div className="footer__middle">
+        <nav aria-label="Footer navigation">
+          <ul>
+            {links.map(([label, target]) => (
+              <li key={target}>
+                <a href={`#${target}`}>{label}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div className="footer__socials" aria-label="Social profiles">
+          <a
+            href="https://github.com/KingBard77"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="GitHub (opens in a new tab)"
+          >
+            <BsGithub />
           </a>
-
-          <a href="https://https://twitter.com" className='home__social-link'>
-            <IoLogoTwitter/>
-            <span>Like on Twitter</span>
+          <a
+            href="https://www.linkedin.com/in/badrul-amin-762000225/"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="LinkedIn (opens in a new tab)"
+          >
+            <BsLinkedin />
+          </a>
+          <a
+            href="https://www.instagram.com/bard_7/"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Instagram (opens in a new tab)"
+          >
+            <BsInstagram />
           </a>
         </div>
       </div>
-    
       <div className="footer__copyright">
-        <small>&copy; Badrul Amin. All right reserved 2025.</small>
+        <small>© {new Date().getFullYear()} Badrul Amin. All rights reserved.</small>
+        <a href="mailto:badamin771@gmail.com">badamin771@gmail.com</a>
       </div>
-    </footer>
-  )
-}
+    </div>
+  </footer>
+);
 
-export default Footer
+export default Footer;
