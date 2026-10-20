@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
+import { lazy, useCallback, useEffect, useState } from 'react';
 
-import Abilities from './components/abilities/Abilities';
 import About from './components/about/About';
 import AuroraBackground from './components/background/AuroraBackground';
 import Contact from './components/contact/Contact';
@@ -12,7 +11,10 @@ import Nav from './components/nav/Nav';
 import Portfolio from './components/portfolio/Portfolio';
 import Qualification from './components/qualification/Qualification';
 import Service from './components/service/Service';
-import Testimonial from './components/testimonial/Testimonial';
+import DeferredSection from './components/shared/DeferredSection';
+
+const Abilities = lazy(() => import('./components/abilities/Abilities'));
+const Testimonial = lazy(() => import('./components/testimonial/Testimonial'));
 
 /**
  * Renders the portfolio with a skippable welcome for visitors allowing motion.
@@ -57,11 +59,15 @@ const App = () => {
         <Nav />
         <About />
         <Qualification />
-        <Abilities />
+        <DeferredSection id="abilities" label="Skills & Technologies" minHeight={720}>
+          <Abilities embedded />
+        </DeferredSection>
         <Service />
         <Portfolio />
         <Gallery />
-        <Testimonial />
+        <DeferredSection id="testimonial" label="Client testimonials" minHeight={600}>
+          <Testimonial embedded />
+        </DeferredSection>
         <Contact />
         <Footer />
       </div>

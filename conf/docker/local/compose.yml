@@ -1,16 +1,17 @@
 # MyPortfolio - local dev environment (Vite dev server with hot reload)
 # Run with: xxdockerbuild up myportfolio   (logs, down, restart, shell web)
-# PORT comes from conf/main.conf (xxdockerbuild passes it); the default keeps plain docker compose working.
+# PORT comes from conf/deploy.local.conf (xxdockerbuild passes it); the default keeps plain docker compose working.
 # The project is mounted at /workspace; nothing is copied into the image.
 
 services:
   web:
     build:
       context: .
-      dockerfile: conf/Dockerfile
+      dockerfile: conf/docker/local/Dockerfile
       target: dev
     image: myportfolio.local
     init: true
+    restart: unless-stopped
     command:
       - bash
       - -o

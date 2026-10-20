@@ -151,11 +151,9 @@ const Nav = () => {
           onClick={() => navigate('home')}
           aria-label="Badrul Amin home"
         >
-          <span className="site-nav__mark" aria-hidden="true">
-            B
-          </span>
+          <img className="site-nav__mark" src="/icon.png" alt="" width="32" height="32" />
           <span>
-            Badrul<span className="site-nav__brand-dot">.</span>
+            Badrul Amin<span className="site-nav__brand-dot">.</span>
           </span>
         </a>
         <ul className="site-nav__links">

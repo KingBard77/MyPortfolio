@@ -1,4 +1,5 @@
-import { BsGithub, BsLinkedin, BsInstagram } from 'react-icons/bs';
+import profileLinks from '../shared/data/profiles';
+
 import './footer.css';
 
 const links = [
@@ -49,30 +50,20 @@ const Footer = () => (
           </ul>
         </nav>
         <div className="footer__socials" aria-label="Social profiles">
-          <a
-            href="https://github.com/KingBard77"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="GitHub (opens in a new tab)"
-          >
-            <BsGithub />
-          </a>
-          <a
-            href="https://www.linkedin.com/in/badrul-amin-762000225/"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="LinkedIn (opens in a new tab)"
-          >
-            <BsLinkedin />
-          </a>
-          <a
-            href="https://www.instagram.com/bard_7/"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Instagram (opens in a new tab)"
-          >
-            <BsInstagram />
-          </a>
+          {profileLinks
+            .filter(({ href }) => href)
+            .map(({ label, href, icon }) => (
+              <a
+                key={label}
+                href={href}
+                target={href.startsWith('mailto:') ? undefined : '_blank'}
+                rel={href.startsWith('mailto:') ? undefined : 'noreferrer'}
+                aria-label={href.startsWith('mailto:') ? label : `${label} (opens in a new tab)`}
+                title={label}
+              >
+                {icon}
+              </a>
+            ))}
         </div>
       </div>
       <div className="footer__copyright">

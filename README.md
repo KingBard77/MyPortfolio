@@ -93,8 +93,10 @@ npm audit --omit=dev --audit-level=moderate
 
 ```text
 MyPortfolio/
-├── conf/                    # Local Docker development configuration
-├── docker/                  # Production Dockerfile and nginx configuration
+├── conf/                    # Workstation deploy settings and Docker configuration
+│   └── docker/
+│       ├── local/           # Development Dockerfile and Compose file
+│       └── prod/            # Production Dockerfile, ignore file, and nginx configuration
 ├── public/                  # Public assets copied directly into the build
 │   └── icon.png
 ├── src/
@@ -118,7 +120,6 @@ MyPortfolio/
 │   ├── App.jsx              # Page composition
 │   ├── index.css            # Global styles and design tokens
 │   └── main.jsx             # React entry point
-├── .dockerignore
 ├── .env.example
 ├── .gitignore
 ├── .prettierrc.json
@@ -158,7 +159,7 @@ The contact form currently uses the portfolio owner's EmailJS configuration. To 
 Run from the repository root:
 
 ```bash
-docker compose --project-directory . -f conf/compose.local.yml up --build
+docker compose --project-directory . -f conf/docker/local/compose.yml up --build
 ```
 
 The development container mounts the source for hot reload and keeps Linux dependencies in a named volume. It serves the site at [http://localhost:3000](http://localhost:3000).
@@ -166,28 +167,29 @@ The development container mounts the source for hot reload and keeps Linux depen
 Stop the development containers with:
 
 ```bash
-docker compose --project-directory . -f conf/compose.local.yml down
+docker compose --project-directory . -f conf/docker/local/compose.yml down
 ```
 
-`conf/main.conf` stores project settings used by the owner's workstation helpers. Plain Docker Compose uses port 3000 by default; set `PORT` when invoking Compose to override it.
+`conf/deploy.local.conf` stores project settings used by the owner's workstation helpers. Plain Docker Compose uses port 3000 by default; set `PORT` when invoking Compose to override it.
 
 ### Production
 
 ```bash
-docker build -f docker/Dockerfile.production -t myportfolio:production .
+docker build -f conf/docker/prod/Dockerfile -t myportfolio:production .
 docker run --rm --name myportfolio -p 127.0.0.1:8080:80 myportfolio:production
 ```
 
 Open [http://localhost:8080](http://localhost:8080).
 
-The production image builds the application with Node.js and serves the generated files through nginx. The root `.dockerignore` restricts build inputs and excludes local environment files, editor metadata, agent instructions, logs, and development artifacts.
+The production image builds the application with Node.js and serves the generated files through nginx. `conf/docker/prod/Dockerfile.dockerignore` restricts build inputs and excludes local environment files, editor metadata, agent instructions, logs, and development artifacts.
 
-For deployment without Docker, serve `build/` through nginx or a static hosting service. Keep `public/` limited to files intended for visitors because Vite copies its contents directly into the build.
+For deployment without Docker, serve `build/` through nginx or a static hosting service. The live site syncs `build/` to Amazon S3 through the owner's workstation helper, configured in `conf/deploy.prod.conf`. Keep `public/` limited to files intended for visitors because Vite copies its contents directly into the build.
 
 ## Current Limitations
 
 - Automated tests are not configured yet; validate affected interactions in a browser alongside lint and build checks.
-- Vite currently reports a large JavaScript bundle. Code splitting and further loading optimization remain future work.
+- Skills and Testimonials load near the viewport; their section anchors remain available before loading. EmailJS loads when the contact form is submitted.
+- Full-resolution gallery originals are retained for downloads; previews and viewer images are used for display.
 
 ## Author
 

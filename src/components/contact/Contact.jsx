@@ -1,4 +1,3 @@
-import emailjs from 'emailjs-com';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { BsWhatsapp } from 'react-icons/bs';
@@ -58,6 +57,7 @@ const Contact = () => {
     setSending(true);
     setStatus(null);
     try {
+      const { default: emailjs } = await import('emailjs-com');
       await emailjs.sendForm(
         'service_yzm2idi',
         'template_8higfss',

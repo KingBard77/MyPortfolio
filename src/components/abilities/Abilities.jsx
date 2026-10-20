@@ -26,9 +26,12 @@ const tabIcons = {
 /**
  * Presents skill categories and proficiency tiles with accessible tab navigation.
  *
+ * @param {Object} props Skills section properties.
+ * @param {boolean} [props.embedded=false] Whether a parent owns the section landmark.
  * @returns {React.ReactElement} The responsive skills browser.
  */
-const Abilities = () => {
+const Abilities = ({ embedded = false }) => {
+  const Container = embedded ? 'div' : 'section';
   const [activeTab, setActiveTab] = useState(abilityGroups[0].id);
   const tabRefs = useRef([]);
   const reducedMotion = useReducedMotion();
@@ -59,7 +62,7 @@ const Abilities = () => {
   };
 
   return (
-    <section id="abilities" aria-labelledby="abilities-title">
+    <Container id={embedded ? undefined : 'abilities'} aria-labelledby="abilities-title">
       <div className="container abilities__container">
         <div className="abilities__heading">
           <SectionHeading
@@ -189,7 +192,7 @@ const Abilities = () => {
           </div>
         </div>
       </div>
-    </section>
+    </Container>
   );
 };
 

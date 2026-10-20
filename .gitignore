@@ -51,6 +51,7 @@ __pycache__/
 /codex/
 .codex/
 .claude/
+.agents/
 AGENTS.md
 
 # Local workstation bootstrap

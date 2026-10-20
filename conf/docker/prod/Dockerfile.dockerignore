@@ -8,8 +8,10 @@
 !src/**
 !public/
 !public/**
-!docker/
-!docker/nginx.conf
+!conf/
+!conf/docker/
+!conf/docker/prod/
+!conf/docker/prod/nginx.conf
 
 # Exclude local metadata and development artifacts inside allowed folders.
 **/.git

@@ -16,9 +16,12 @@ import './testimonial.css';
 /**
  * Presents existing client reviews in an accessible, manually controlled slider.
  *
+ * @param {Object} props Testimonial section properties.
+ * @param {boolean} [props.embedded=false] Whether a parent owns the section landmark.
  * @returns {React.ReactElement} The testimonials section.
  */
-const Testimonial = () => {
+const Testimonial = ({ embedded = false }) => {
+  const Container = embedded ? 'div' : 'section';
   const sliderRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const reducedMotion = useReducedMotion();
@@ -30,7 +33,7 @@ const Testimonial = () => {
   };
 
   return (
-    <section id="testimonial" aria-labelledby="testimonial-title">
+    <Container id={embedded ? undefined : 'testimonial'} aria-labelledby="testimonial-title">
       <div className="container testimonial__container">
         <div className="testimonial__heading">
           <SectionHeading
@@ -88,7 +91,7 @@ const Testimonial = () => {
           </div>
         </div>
       </div>
-    </section>
+    </Container>
   );
 };
 

@@ -1,10 +1,13 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { BsLinkedin, BsGithub, BsInstagram } from 'react-icons/bs';
 import { FaArrowRight, FaDownload } from 'react-icons/fa';
 
 import mascot from '../../assets/hero/mascot-robot.webp';
 import coverLetter from '../../assets/resume/coverletter-badrulamin.pdf';
 import resume from '../../assets/resume/resume-badrulamin.pdf';
+import profileLinks from '../shared/data/profiles';
+
+import TypedRole from './components/TypedRole';
+import heroRoles from './data/roles';
 import './header.css';
 
 /**
@@ -27,7 +30,7 @@ const Header = ({ ready = true }) => {
       <div className="container header__container">
         <div className="header__data">
           <motion.p className="home__eyebrow" {...entrance(0.1)}>
-            Infrastructure Engineer
+            <TypedRole roles={heroRoles} isActive={ready} />
             <span className="home__cursor" aria-hidden="true">
               |
             </span>
@@ -56,30 +59,20 @@ const Header = ({ ready = true }) => {
           </motion.div>
 
           <motion.div className="header__social" aria-label="Social links" {...entrance(0.5)}>
-            <a
-              href="https://github.com/KingBard77"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="GitHub (opens in a new tab)"
-            >
-              <BsGithub />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/badrul-amin-762000225/"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="LinkedIn (opens in a new tab)"
-            >
-              <BsLinkedin />
-            </a>
-            <a
-              href="https://www.instagram.com/bard_7/"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Instagram (opens in a new tab)"
-            >
-              <BsInstagram />
-            </a>
+            {profileLinks
+              .filter(({ href }) => href)
+              .map(({ label, href, icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith('mailto:') ? undefined : '_blank'}
+                  rel={href.startsWith('mailto:') ? undefined : 'noreferrer'}
+                  aria-label={href.startsWith('mailto:') ? label : `${label} (opens in a new tab)`}
+                  title={label}
+                >
+                  {icon}
+                </a>
+              ))}
             <span className="header__social-divider" aria-hidden="true" />
             <a href={coverLetter} className="hero__cover-letter" target="_blank" rel="noreferrer">
               Cover letter <FaArrowRight aria-hidden="true" />
@@ -95,7 +88,7 @@ const Header = ({ ready = true }) => {
             alt="A robot in a teal hoodie with glowing neon eyes"
             width="1122"
             height="1402"
-            fetchPriority="high"
+            fetchpriority="high"
           />
           <span className="hero__character-caption">Built on curiosity. Powered by coffee.</span>
         </motion.div>
