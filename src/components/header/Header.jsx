@@ -1,12 +1,11 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { FaArrowRight, FaDownload } from 'react-icons/fa';
+import { FaArrowRight, FaEnvelope } from 'react-icons/fa';
 
 import mascot from '../../assets/hero/mascot-robot.webp';
-import coverLetter from '../../assets/resume/coverletter-badrulamin.pdf';
-import resume from '../../assets/resume/resume-badrulamin.pdf';
 import profileLinks from '../shared/data/profiles';
 
 import TypedRole from './components/TypedRole';
+import documentRequestLinks from './data/documentRequests';
 import heroRoles from './data/roles';
 import './header.css';
 
@@ -49,12 +48,11 @@ const Header = ({ ready = true }) => {
               View My Work <FaArrowRight aria-hidden="true" />
             </a>
             <a
-              href={resume}
+              href={documentRequestLinks.resume}
               className="hero__button hero__button--resume"
-              target="_blank"
-              rel="noreferrer"
+              title="Opens your email app with a ready-to-send resume request"
             >
-              My Resume <FaDownload aria-hidden="true" />
+              Request Resume <FaEnvelope aria-hidden="true" />
             </a>
           </motion.div>
 
@@ -74,8 +72,12 @@ const Header = ({ ready = true }) => {
                 </a>
               ))}
             <span className="header__social-divider" aria-hidden="true" />
-            <a href={coverLetter} className="hero__cover-letter" target="_blank" rel="noreferrer">
-              Cover letter <FaArrowRight aria-hidden="true" />
+            <a
+              href={documentRequestLinks.coverLetter}
+              className="hero__cover-letter"
+              title="Opens your email app with a ready-to-send cover letter request"
+            >
+              Request cover letter <FaArrowRight aria-hidden="true" />
             </a>
           </motion.div>
         </div>
